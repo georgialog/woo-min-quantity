@@ -1,0 +1,49 @@
+/* WooCommerce Minimum Quantity Plugin Styles */
+
+/* Disabled Add to Cart Button */
+button.woo-min-qty-disabled {
+    opacity: 0.5 !important;
+    cursor: not-allowed !important;
+    background-color: #ccc !important;
+    color: #666 !important;
+    pointer-events: none;
+}
+
+button.woo-min-qty-disabled:hover {
+    background-color: #ccc !important;
+    color: #666 !important;
+}
+
+/* Validation Notice */
+.woo-min-qty-notice {
+    margin: 15px 0;
+    padding: 0;
+}
+
+.woo-min-qty-notice .woocommerce-notice--error {
+    display: block;
+    padding: 12px 15px;
+    background-color: #fee;
+    border-left: 4px solid #d1434f;
+    color: #d1434f;
+    border-radius: 2px;
+    margin: 0;
+}
+
+.woo-min-qty-notice .woocommerce-notice--error::before {
+    content: "⚠ ";
+    font-weight: bold;
+}
+
+/* Quantity Input Styling */
+input.qty {
+    text-align: center;
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+    .woo-min-qty-notice .woocommerce-notice--error {
+        padding: 10px 12px;
+        font-size: 14px;
+    }
+}

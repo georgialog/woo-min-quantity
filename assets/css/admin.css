@@ -1,0 +1,111 @@
+/* ============================================================
+   WooCommerce Minimum Quantity — Admin Styles
+   ============================================================ */
+
+/* Page heading */
+.woo-min-qty-admin h1 .dashicons {
+    font-size: 28px;
+    width: 28px;
+    height: 28px;
+    vertical-align: middle;
+    margin-right: 6px;
+    color: #786DDC;
+}
+
+.woo-min-qty-brand {
+    display: inline-block;
+    margin-left: 12px;
+    font-size: 13px;
+    color: #786DDC;
+    text-decoration: none;
+    vertical-align: middle;
+    opacity: 0.7;
+}
+.woo-min-qty-brand:hover { opacity: 1; }
+
+/* Rules table */
+.woo-min-qty-rules-table {
+    border-collapse: collapse;
+    margin-top: 8px;
+}
+
+.woo-min-qty-rules-table thead th {
+    background: #f0f0f1;
+    font-weight: 600;
+    padding: 10px 12px;
+    font-size: 13px;
+}
+
+.woo-min-qty-rules-table thead th small {
+    font-weight: normal;
+    font-size: 11px;
+    color: #666;
+}
+
+.woo-min-qty-rules-table td {
+    vertical-align: middle;
+    padding: 9px 12px;
+}
+
+/* Column widths */
+.woo-min-qty-rules-table .col-category { width: 28%; }
+.woo-min-qty-rules-table .col-qty      { width: 12%; }
+.woo-min-qty-rules-table .col-message  { width: 50%; }
+.woo-min-qty-rules-table .col-actions  { width: 10%; text-align: center; }
+
+/* Category select */
+.woo-min-qty-cat-select {
+    width: 100%;
+    min-width: 140px;
+}
+
+/* Min qty input */
+.woo-min-qty-rules-table .col-qty input[type="number"] {
+    width: 75px;
+}
+
+/* Message input */
+.woo-min-qty-rules-table .col-message input[type="text"] {
+    width: 100%;
+}
+
+/* Empty state */
+.no-rules-placeholder {
+    text-align: center;
+    padding: 24px !important;
+    color: #888;
+    font-style: italic;
+    font-size: 13px;
+}
+
+/* Remove button */
+.woo-min-qty-remove-rule {
+    color: #d63638 !important;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 4px;
+    line-height: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+}
+.woo-min-qty-remove-rule:hover { color: #a00 !important; }
+.woo-min-qty-remove-rule .dashicons { font-size: 18px; width: 18px; height: 18px; }
+
+/* Add rule button row */
+.woo-min-qty-add-wrap {
+    margin: 10px 0 0;
+}
+.woo-min-qty-add-wrap button .dashicons {
+    font-size: 16px;
+    width: 16px;
+    height: 16px;
+    vertical-align: text-bottom;
+    margin-right: 3px;
+}
+
+/* Hover row highlight */
+.woo-min-qty-rules-table tbody tr.woo-min-qty-rule-row:hover {
+    background: #f7f9fb;
+}
