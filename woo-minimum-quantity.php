@@ -487,9 +487,17 @@ class WooCommerce_Minimum_Quantity {
     public function set_quantity_input_args($args, $product) {
         $resolved = $this->get_min_for_product($product->get_id());
         if ($resolved) {
-            $args['min_value']   = $resolved['min_qty'];
-            $current_input       = isset($args['input_value']) ? intval($args['input_value']) : 1;
-            $args['input_value'] = max($current_input, $resolved['min_qty']);
+            $min_qty = $resolved['min_qty'];
+            $posted_qty = isset($_POST['quantity']) ? wc_stock_amount(wp_unslash($_POST['quantity'])) : null;
+
+            $args['min_value'] = $min_qty;
+            $args['step']      = 1;
+
+            if ($posted_qty !== null) {
+                $args['input_value'] = max($posted_qty, $min_qty);
+            } elseif (!isset($args['input_value']) || intval($args['input_value']) < $min_qty) {
+                $args['input_value'] = $min_qty;
+            }
         }
         return $args;
     }

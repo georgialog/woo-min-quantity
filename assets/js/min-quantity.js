@@ -31,7 +31,10 @@ jQuery(document).ready(function ($) {
         if (!$qty.length || currentMinQty <= 0) return;
 
         $qty.attr('min', currentMinQty);
-        if ((parseInt($qty.val()) || 0) < currentMinQty) {
+        $qty.attr('step', 1);
+
+        const currentValue = parseInt($qty.val(), 10);
+        if (Number.isNaN(currentValue) || currentValue < currentMinQty) {
             $qty.val(currentMinQty);
         }
     }
@@ -73,4 +76,3 @@ jQuery(document).ready(function ($) {
         setTimeout(updateButtonState, 100);
     });
 });
-
