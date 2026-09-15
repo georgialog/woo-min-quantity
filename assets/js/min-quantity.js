@@ -45,7 +45,7 @@ jQuery(document).ready(function ($) {
         if (currentMinQty <= 0) return;
 
         const $btn = $('button[name="add-to-cart"], button.single_add_to_cart_button');
-        const qty  = parseInt($('input.qty, input[name="quantity"]').val()) || 0;
+        const qty  = Math.max(0, parseInt($('input.qty, input[name="quantity"]').val(), 10) || 0);
 
         if (qty < currentMinQty) {
             $btn.prop('disabled', true).addClass('woo-min-qty-disabled');
@@ -64,7 +64,9 @@ jQuery(document).ready(function ($) {
             $notice = $('<div class="woo-min-qty-notice woocommerce-notices-wrapper"></div>');
             $notice.insertBefore($form);
         }
-        $notice.html('<div class="woocommerce-notice woocommerce-notice--error" role="alert">' + msg + '</div>');
+
+        const $message = $('<div class="woocommerce-notice woocommerce-notice--error" role="alert"></div>').text(msg || '');
+        $notice.empty().append($message);
     }
 
     function hideValidationMessage() {

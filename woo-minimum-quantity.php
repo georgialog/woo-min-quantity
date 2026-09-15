@@ -78,7 +78,7 @@ class WooCommerce_Minimum_Quantity {
             $min_qty = max(1, intval(get_post_meta($product_id, 'woo_min_qty_product_min', true)));
             $message = get_post_meta($product_id, 'woo_min_qty_product_message', true);
             $message = $message
-                ? str_replace('{quantity}', $min_qty, $message)
+               ? $this->sanitize_notice_message(str_replace('{quantity}', $min_qty, $message), $min_qty)
                 : $this->build_message($min_qty);
             return array('min_qty' => $min_qty, 'message' => $message, 'source' => 'product');
         }
@@ -117,7 +117,7 @@ class WooCommerce_Minimum_Quantity {
 
         if ($matched_min > 0) {
             $matched_message = $matched_message
-                ? str_replace('{quantity}', $matched_min, $matched_message)
+               ? $this->sanitize_notice_message(str_replace('{quantity}', $matched_min, $matched_message), $matched_min)
                 : $this->build_message($matched_min);
             return array('min_qty' => $matched_min, 'message' => $matched_message, 'source' => 'category');
         }
@@ -126,11 +126,27 @@ class WooCommerce_Minimum_Quantity {
     }
 
     /**
+     * Strip unsafe HTML from notices and ensure a plain-text message is returned.
+     *
+     * @param  string $message
+     * @param  int    $min_qty
+     * @return string
+     */
+    private function sanitize_notice_message($message, $min_qty) {
+       $safe = trim(wp_strip_all_tags((string) $message));
+       if ($safe === '') {
+           return $this->build_message(max(1, intval($min_qty)));
+       }
+       return $safe;
+    }
+
+    /**
      * Build a message from the global template, substituting {quantity}.
      */
     private function build_message($min_qty) {
-        $template = get_option('woo_min_qty_global_message', 'Minimum quantity of {quantity} items required.');
-        return str_replace('{quantity}', $min_qty, $template);
+       $template = get_option('woo_min_qty_global_message', 'Minimum quantity of {quantity} items required.');
+       $message = str_replace('{quantity}', (string) max(1, intval($min_qty)), $template);
+       return $this->sanitize_notice_message($message, $min_qty);
     }
 
     // =========================================================================
