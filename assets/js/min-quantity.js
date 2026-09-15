@@ -1,6 +1,7 @@
 jQuery(document).ready(function ($) {
     let currentMinQty = 0;
     let currentMessage = '';
+    let currentStep = 1;
 
     function fetchProductMinQty() {
         $.ajax({
@@ -19,6 +20,7 @@ jQuery(document).ready(function ($) {
 
                 currentMinQty = data.min_qty;
                 currentMessage = data.message;
+                currentStep = wooMinQtyData.stepperMode === 'multiple' ? currentMinQty : 1;
 
                 updateQuantityInput();
                 updateButtonState();
@@ -31,7 +33,7 @@ jQuery(document).ready(function ($) {
         if (!$qty.length || currentMinQty <= 0) return;
 
         $qty.attr('min', currentMinQty);
-        $qty.attr('step', 1);
+        $qty.attr('step', currentStep);
 
         const currentValue = parseInt($qty.val(), 10);
         if (Number.isNaN(currentValue) || currentValue < currentMinQty) {

@@ -4,7 +4,7 @@
  * Plugin Name: Minimum Quantity for WooCommerce
  * Plugin URI: https://geocreates.me/woo-minimum-quantity
  * Description: Enforce per-category and per-product minimum quantity rules in WooCommerce. Supports multiple category rules with different minimums running simultaneously.
- * Version: 2.0.0
+ * Version: 2.2.0
  * Author: Georgia Log
  * Author URI: https://geocreates.me
  * License: GPL-3.0+
@@ -30,7 +30,7 @@ class WooCommerce_Minimum_Quantity {
     }
 
     public function __construct() {
-        define('WOO_MIN_QTY_VERSION', '2.0.0');
+        define('WOO_MIN_QTY_VERSION', '2.2.0');
         define('WOO_MIN_QTY_PLUGIN_DIR', plugin_dir_path(__FILE__));
         define('WOO_MIN_QTY_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -159,6 +159,11 @@ class WooCommerce_Minimum_Quantity {
             'woo_min_qty_global_message',
             'sanitize_textarea_field'
         );
+        register_setting(
+            'woo_min_qty_settings_group',
+            'woo_min_qty_stepper_mode',
+            array($this, 'sanitize_stepper_mode')
+        );
     }
 
     public function sanitize_category_rules($input) {
@@ -177,6 +182,18 @@ class WooCommerce_Minimum_Quantity {
             );
         }
         return $sanitized;
+    }
+
+    public function sanitize_stepper_mode($mode) {
+        return in_array($mode, array('single', 'multiple'), true) ? $mode : 'single';
+    }
+
+    private function get_stepper_mode() {
+        return get_option('woo_min_qty_stepper_mode', 'single');
+    }
+
+    private function get_step_size($min_qty) {
+        return $this->get_stepper_mode() === 'multiple' ? max(1, intval($min_qty)) : 1;
     }
 
     public function enqueue_admin_scripts($hook) {
@@ -205,6 +222,7 @@ class WooCommerce_Minimum_Quantity {
 
         $rules          = $this->get_category_rules();
         $global_message = get_option('woo_min_qty_global_message', 'Minimum quantity of {quantity} items required.');
+        $stepper_mode   = $this->get_stepper_mode();
 
         $categories = get_terms(array(
             'taxonomy'   => 'product_cat',
@@ -268,6 +286,29 @@ class WooCommerce_Minimum_Quantity {
                 </p>
 
                 <hr>
+
+                <h2>Stepper Behavior</h2>
+                <table class="form-table">
+                    <tr>
+                        <th scope="row">Quantity Step Mode</th>
+                        <td>
+                            <fieldset>
+                                <label>
+                                    <input type="radio" name="woo_min_qty_stepper_mode" value="single" <?php checked($stepper_mode, 'single'); ?> />
+                                    Increase normally after MOQ (20, 21, 22, 23...)
+                                </label>
+                                <br>
+                                <label>
+                                    <input type="radio" name="woo_min_qty_stepper_mode" value="multiple" <?php checked($stepper_mode, 'multiple'); ?> />
+                                    Increase by MOQ multiples (20, 40, 60, 80...)
+                                </label>
+                            </fieldset>
+                            <p class="description">
+                                Example MOQ above is 20. Applies to product pages with a minimum quantity rule. The minimum remains the floor in both modes.
+                            </p>
+                        </td>
+                    </tr>
+                </table>
 
                 <h2>Default Message Template</h2>
                 <table class="form-table">
@@ -478,9 +519,10 @@ class WooCommerce_Minimum_Quantity {
             WOO_MIN_QTY_VERSION
         );
         wp_localize_script('woo-min-qty-script', 'wooMinQtyData', array(
-            'ajaxUrl'   => admin_url('admin-ajax.php'),
-            'nonce'     => wp_create_nonce('woo_min_qty_nonce'),
-            'productId' => get_the_ID(),
+            'ajaxUrl'     => admin_url('admin-ajax.php'),
+            'nonce'       => wp_create_nonce('woo_min_qty_nonce'),
+            'productId'   => get_the_ID(),
+            'stepperMode' => $this->get_stepper_mode(),
         ));
     }
 
@@ -491,7 +533,7 @@ class WooCommerce_Minimum_Quantity {
             $posted_qty = isset($_POST['quantity']) ? wc_stock_amount(wp_unslash($_POST['quantity'])) : null;
 
             $args['min_value'] = $min_qty;
-            $args['step']      = 1;
+            $args['step']      = $this->get_step_size($min_qty);
 
             if ($posted_qty !== null) {
                 $args['input_value'] = max($posted_qty, $min_qty);

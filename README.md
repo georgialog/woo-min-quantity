@@ -11,6 +11,7 @@ A flexible WordPress plugin for WooCommerce that enforces a minimum quantity req
 **Disabled Button State** - Add to cart button is grayed out and disabled until minimum quantity is met
 **Validation Messages** - Clear, customizable error messages (global or per-product)
 **Default Quantity** - Automatically sets the quantity input to the minimum value
+**Configurable Stepper Mode** - Choose between normal increments (20, 21, 22) or MOQ multiples (20, 40, 60)
 **Real-Time Validation** - Live updates as users change the quantity
 **Flexible Fallback** - Products without custom settings use global defaults
 **Responsive Design** - Works seamlessly on desktop and mobile devices
@@ -22,6 +23,7 @@ Navigate to **WooCommerce > Minimum Quantity** in the WordPress admin panel to:
 - **Enable/Disable** the minimum quantity requirement globally
 - **Set Minimum Quantity** - Default minimum for all products
 - **Customize Message** - Edit the validation message (use `{quantity}` as a placeholder)
+- **Choose Stepper Mode** - Pick normal steps or MOQ-multiple steps after the minimum is reached
 
 ### Per-Product Settings
 
@@ -69,7 +71,8 @@ Uses global message
 3. **Real-Time Updates**: As users adjust quantity, button enables/disables automatically
 4. **Validation Message**: A clear error message appears when quantity is insufficient
 5. **On Valid Entry**: The message disappears and the button becomes clickable
-6. **Stepper Behavior**: Quantity starts at the MOQ, can increase normally (20, 21, 22...), and cannot be decreased below the MOQ.
+6. **Stepper Behavior**: Quantity starts at the MOQ and cannot be decreased below it.
+7. **Stepper Mode Options**: You can choose between normal increments (20, 21, 22...) or MOQ multiples (20, 40, 60...).
 
 ## Customization
 
@@ -150,13 +153,11 @@ This plugin is licensed under the GPL-3.0 License. See the LICENSE file for more
 
 ## Changelog
 
-### Version 1.0.0
-- Initial release
-- Minimum quantity enforcement
-- Admin settings page
-- Real-time validation
-- Disabled button state
-- Customizable messages
+### Version 2.2.0
+- Added a configurable stepper mode setting in the admin page
+- Store admins can now choose between normal increments after MOQ (20, 21, 22...) or MOQ multiples (20, 40, 60...)
+- The selected stepper mode applies to products with active minimum quantity rules
+- The minimum quantity still acts as the floor in both stepper modes
 
 ### Version 1.1.0
 - Fixed the quantity stepper so the minimum quantity acts as a floor instead of a forced jump value
@@ -164,3 +165,11 @@ This plugin is licensed under the GPL-3.0 License. See the LICENSE file for more
 - The stepper will no longer allow values below the minimum quantity
 - Add-to-cart remains disabled until the current quantity meets the minimum requirement
 - Validation message remains visible while the quantity is below the minimum
+
+### Version 1.0.0
+- Initial release
+- Minimum quantity enforcement
+- Admin settings page
+- Real-time validation
+- Disabled button state
+- Customizable messages
