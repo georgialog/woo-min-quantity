@@ -158,7 +158,7 @@ This plugin is licensed under the GPL-3.0 License. See the LICENSE file for more
 - Store admins can now choose between normal increments after MOQ (20, 21, 22...) or MOQ multiples (20, 40, 60...)
 - The selected stepper mode applies to products with active minimum quantity rules
 - The minimum quantity still acts as the floor in both stepper modes
-
+    
 ### Version 1.1.0
 - Fixed the quantity stepper so the minimum quantity acts as a floor instead of a forced jump value
 - Quantity now starts at the minimum order quantity, and the user can continue increasing normally (20, 21, 22, ...)

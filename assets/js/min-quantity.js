@@ -3,6 +3,10 @@ jQuery(document).ready(function ($) {
     let currentMessage = '';
     let currentStep = 1;
 
+    function isMultipleMode() {
+        return wooMinQtyData.stepperMode === 'multiple';
+    }
+
     function fetchProductMinQty() {
         $.ajax({
             url: wooMinQtyData.ajaxUrl,
@@ -35,9 +39,25 @@ jQuery(document).ready(function ($) {
         $qty.attr('min', currentMinQty);
         $qty.attr('step', currentStep);
 
+        if (isMultipleMode()) {
+            $qty.attr('readonly', 'readonly');
+            $qty.attr('inputmode', 'none');
+        } else {
+            $qty.removeAttr('readonly');
+            $qty.attr('inputmode', 'numeric');
+        }
+
         const currentValue = parseInt($qty.val(), 10);
         if (Number.isNaN(currentValue) || currentValue < currentMinQty) {
             $qty.val(currentMinQty);
+            return;
+        }
+
+        if (currentStep > 1) {
+            const offset = currentValue - currentMinQty;
+            if (offset % currentStep !== 0) {
+                $qty.val(currentMinQty);
+            }
         }
     }
 
@@ -75,8 +95,24 @@ jQuery(document).ready(function ($) {
 
     fetchProductMinQty();
 
-    $(document).on('change keyup', 'input.qty, input[name="quantity"]', updateButtonState);
+    $(document).on('change', 'input.qty, input[name="quantity"]', function () {
+        updateQuantityInput();
+        updateButtonState();
+    });
+
+    $(document).on('keydown paste input', 'input.qty, input[name="quantity"]', function (event) {
+        if (!isMultipleMode()) {
+            return true;
+        }
+
+        event.preventDefault();
+        return false;
+    });
+
     $(document).on('click', '.plus, .minus', function () {
-        setTimeout(updateButtonState, 100);
+        setTimeout(function () {
+            updateQuantityInput();
+            updateButtonState();
+        }, 100);
     });
 });

@@ -40,6 +40,12 @@ input.qty {
     text-align: center;
 }
 
+input.qty[readonly] {
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+}
+
 /* Responsive Adjustments */
 @media (max-width: 768px) {
     .woo-min-qty-notice .woocommerce-notice--error {
